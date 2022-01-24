@@ -8,7 +8,6 @@ from .permissions import IsAdminUser
 from .serializers import UserListSerializer, UserDetailSerializer
 
 
-    
 class UserViewSet(viewsets.ModelViewSet):
     """
     L'affichage et les actions sont déterminés par votre niveau de droits concernant les utilisateurs.\n
@@ -18,10 +17,12 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
     detail_serializer_class = UserDetailSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['id', 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'group']
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    ordering_fields = ['id', 'date_created', 'date_updated']
+    search_fields = ['id', 'first_name', 'last_name', 'email',
+                     'date_created', 'date_updated', 'is_staff', 'is_superuser', 'group']
     permission_classes = (IsAuthenticated, IsAdminUser,)
-    
+
     def perform_create(self, serializer):
         if 'password' in self.request.data:
             password = make_password(self.request.data['password'])
@@ -30,11 +31,8 @@ class UserViewSet(viewsets.ModelViewSet):
             user = serializer.save()
         if user.is_staff or user.is_superuser:
             user.group = "GESTION"
-            
-    
+
     def get_serializer_class(self):
-        if self.action == 'list':
-            return UserListSerializer
-        elif self.action in ['retrieve', 'update', 'create', 'delete']:
+        if self.request.user.is_staff or self.request.user.is_superuser or self.request.user.group == "GESTION":
             return UserDetailSerializer
         return UserListSerializer

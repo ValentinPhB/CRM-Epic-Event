@@ -40,11 +40,11 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     class Groups(models.TextChoices):
-        NONE = "NONE"
+        NO = "NON ASSIGNÉ"
         GESTION = "GESTION"
         VENTE = "VENTE"
         SUPPORT = "SUPPORT"
-        
+
     first_name = models.CharField(
         verbose_name="Prénom", max_length=150)
     last_name = models.CharField(
@@ -53,23 +53,28 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name="Email", max_length=150, unique=True)
 
     is_active = models.BooleanField(verbose_name="Actif ?", default=True)
-    is_staff = models.BooleanField(verbose_name="Membre du Staff ?",default=False)
-    is_superuser = models.BooleanField(verbose_name="Super-utilisateur ?", default=False)
-    date_created = models.DateTimeField(verbose_name="Dâte de création", auto_now_add=True)
-    date_updated = models.DateTimeField(verbose_name="Dâte de mise à jour", auto_now=True)
-    group = models.CharField(verbose_name="Groupe", max_length=150, choices=Groups.choices, default=Groups.NONE)
+    is_staff = models.BooleanField(
+        verbose_name="Membre du Staff ?", default=False)
+    is_superuser = models.BooleanField(
+        verbose_name="Super-utilisateur ?", default=False)
+    date_created = models.DateTimeField(
+        verbose_name="Date de création", auto_now_add=True)
+    date_updated = models.DateTimeField(
+        verbose_name="Date de mise à jour", auto_now=True)
+    group = models.CharField(
+        verbose_name="Groupe", max_length=150, choices=Groups.choices, default=Groups.NO)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
-    
+
     class Meta:
         verbose_name_plural = "Gestion des utilisateurs"
         verbose_name = "Utilisateur"
 
     def __str__(self):
         return '%s, %s, %s' % (self.first_name, self.last_name, self.email,)
-       
+
     @property
     def get_full_name(self):
         return '%s, %s, %s' % (self.first_name, self.last_name, self.email,)
@@ -85,7 +90,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def get_last_name(self):
         return self.last_name
-    
+
     @property
     def get_email(self):
         return self.email

@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.contrib.auth.models import Group
 
 from authentication.models import User
 
@@ -16,4 +17,6 @@ class UserAdmin(admin.ModelAdmin):
             'fields': ('is_active', 'is_staff', 'is_superuser'),
         }),
     )
-    
+
+
+admin.site.unregister(Group)

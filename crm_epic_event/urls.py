@@ -19,9 +19,11 @@ from django.urls import path, include
 from rest_framework_nested import routers
 
 from authentication.views import UserViewSet
+from customers.views import CustomerViewSet
 
 router = routers.DefaultRouter()
-router.register(r'user_lists', UserViewSet, basename="users-lists")
+router.register(r'user_lists', UserViewSet, basename="user")
+router.register(r'customer_lists', CustomerViewSet, basename="customer")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

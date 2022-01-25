@@ -4,6 +4,7 @@ from rest_framework import permissions
 class IsAdminUser(permissions.BasePermission):
     """
     Allows access to SAFE_METHODS only to non-admin users or other groups than "GESTION" one.
+    "GESTION", is_staff = True and is_superuser= True have all rights.
     """
 
     def has_permission(self, request, view):

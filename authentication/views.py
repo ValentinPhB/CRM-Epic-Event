@@ -8,11 +8,12 @@ from .permissions import IsAdminUser
 from .serializers import UserListSerializer, UserDetailSerializer
 
 
+# Documentation is in french because it's displayed in the view.
 class UserViewSet(viewsets.ModelViewSet):
     """
-    L'affichage et les actions sont déterminés par votre niveau de droits concernant les utilisateurs.\n
-    La recherche est sensible aux attributs : 'id', 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'group'.\n
-    Seuls les supers-utilisateurs, staff-membres et membres de groupe "GESTION" peuvent ajouter, modifier ou supprimer un utilisateur.\n
+    La recherche est sensible aux attributs suivants : 'id'(User), 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'group'.\n
+    Les éléments peuvent être ordonnés pour les attributs suivants :'id(User)', 'date_created', 'date_updated' \n
+    Seuls les "supers-utilisateurs" peuvent ajouter, modifier ou supprimer un utilisateur.\n
     """
     queryset = User.objects.all()
     serializer_class = UserListSerializer
@@ -20,7 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['id', 'date_created', 'date_updated']
     search_fields = ['id', 'first_name', 'last_name', 'email',
-                     'date_created', 'date_updated', 'is_staff', 'is_superuser', 'group']
+                     'is_staff', 'is_superuser', 'group']
     permission_classes = (IsAuthenticated, IsAdminUser,)
 
     def perform_create(self, serializer):

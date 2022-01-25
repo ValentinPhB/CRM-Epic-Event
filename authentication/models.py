@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
@@ -40,7 +39,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     class Groups(models.TextChoices):
-        NO = "NON ASSIGNÉ"
+        NON_ASSIGNED = "NON ASSIGNÉ"
         GESTION = "GESTION"
         VENTE = "VENTE"
         SUPPORT = "SUPPORT"
@@ -62,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_updated = models.DateTimeField(
         verbose_name="Date de mise à jour", auto_now=True)
     group = models.CharField(
-        verbose_name="Groupe", max_length=150, choices=Groups.choices, default=Groups.NO)
+        verbose_name="Groupe", max_length=150, choices=Groups.choices, default=Groups.NON_ASSIGNED)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

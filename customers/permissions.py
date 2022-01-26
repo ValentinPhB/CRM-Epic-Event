@@ -13,10 +13,11 @@ POST_METHOD = ['POST']
 
 class IsConcernedOrAdmin(permissions.BasePermission):
     """
-    Allows rights to customers in function of User.group.
+    CUSTOMERS
+    Allows rights to customers_instances in function of User.group.
     "GESTION" has superuser rights.
     "VENTE" can CREATE, READ all Customers and UPDATE Customers if they are linked with.
-    "SUPPORT" can READ Customers information if they are linked with.
+    "SUPPORT" can GET Customers-lists and GET Detail information of one if they are linked with.
     
     Only superusers can delete Customers and add a "VENTE" User to.
     """
@@ -57,3 +58,11 @@ class IsConcernedOrAdmin(permissions.BasePermission):
         if obj.sales_contact == request.user:
             return True
         
+        # # Detail Access (GET) for "SUPPORT" member linked with customer by event.
+        # try:
+        #     event = Event.objects.get(customer_instance=view.kwargs.get(
+        #         'pk'), support_contact=request.user.id)
+        #     if request.method in SAFE_METHODS:
+        #         return True
+        # except ObjectDoesNotExist:
+        #     return False

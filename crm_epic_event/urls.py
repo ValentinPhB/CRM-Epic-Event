@@ -20,10 +20,12 @@ from rest_framework_nested import routers
 
 from authentication.views import UserViewSet
 from customers.views import CustomerViewSet
+from contracts.views import ContractViewSet
 
 router = routers.DefaultRouter()
-router.register(r'user_lists', UserViewSet, basename="user")
-router.register(r'customer_lists', CustomerViewSet, basename="customer")
+router.register(r'users_list', UserViewSet, basename="user")
+router.register(r'customers_list', CustomerViewSet, basename="customer")
+router.register(r'contracts_list', ContractViewSet, basename="contract")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

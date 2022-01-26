@@ -16,8 +16,7 @@ class UserListSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'first_name', 'last_name', 'email',
                   'is_staff', 'is_superuser', 'date_created', 'date_updated', 'group')
-
-
+        
 class UserDetailSerializer(serializers.ModelSerializer):
     date_created = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S", read_only=True)

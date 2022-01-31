@@ -11,9 +11,10 @@ from .serializers import UserListSerializer, UserDetailSerializer
 # Documentation is in french because it's displayed in the view.
 class UserViewSet(viewsets.ModelViewSet):
     """
-    La recherche est sensible aux attributs suivants : 'id'(User), 'first_name', 'last_name', 'email', 'is_staff', 'is_superuser', 'group'.\n
+    La recherche est sensible aux attributs suivants : 'id'(User), 'first_name', 'last_name', 'email', 'is_superuser'(BOOL), 'group'.\n
     Les éléments peuvent être ordonnés pour les attributs suivants :'id(User)', 'date_created', 'date_updated' \n
     Seuls les "supers-utilisateurs" peuvent ajouter, modifier ou supprimer un utilisateur.\n
+    Les membres de l'équipe "VENTE" et "SUPPORT" peuvent avoir accès, en lecture, à la liste générale des utilisateurs.
     """
     queryset = User.objects.all()
     serializer_class = UserListSerializer
@@ -21,7 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['id', 'date_created', 'date_updated']
     search_fields = ['id', 'first_name', 'last_name', 'email',
-                     'is_staff', 'is_superuser', 'group']
+                     'is_superuser', 'group']
     permission_classes = (IsAuthenticated, IsAdminUser,)
 
     def perform_create(self, serializer):

@@ -21,11 +21,13 @@ from rest_framework_nested import routers
 from authentication.views import UserViewSet
 from customers.views import CustomerViewSet
 from contracts.views import ContractViewSet
+from events.views import EventViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users_list', UserViewSet, basename="user")
 router.register(r'customers_list', CustomerViewSet, basename="customer")
 router.register(r'contracts_list', ContractViewSet, basename="contract")
+router.register(r'events_list', EventViewSet, basename="event")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -15,9 +15,9 @@ class IsConcernedOrAdmin(permissions.BasePermission):
     """
     CONTRACT
     Allows rights to contract_instances in function of User.group.
-    "GESTION" has superuser rights.
-    "VENTE" can CREATE, READ all Contract and UPDATE Contract if they are linked with.
-    "SUPPORT" can GET Contracts_lists.
+    "GESTION" members has superuser rights.
+    "VENTE" members and "SUPPORT" can GET Contracts_lists.
+    "VENTE" members can CREATE, READ DETAIL's Contract and UPDATE it if they are linked with.
     
     Only superusers can delete Contract.
     """

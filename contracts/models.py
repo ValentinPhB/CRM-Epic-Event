@@ -7,8 +7,8 @@ from customers.models import Customer
 
 class Contract(models.Model):
     sales_contact = models.ForeignKey(User, verbose_name="Vendeur assigné",
-                                      related_name="assigned_contract",
-                                      on_delete=models.SET_DEFAULT, default=0, blank=True,
+                                      related_name="assigned_contracts",
+                                      on_delete=models.SET_DEFAULT, default=None, blank=True,
                                       null=True, limit_choices_to={'group': "VENTE"})
     customer_instance = models.ForeignKey(
         Customer, verbose_name="Client", related_name="contracts", on_delete=models.CASCADE)
@@ -29,4 +29,12 @@ class Contract(models.Model):
 
 
     def __str__(self):
-        return 'Vendeur assigné : %s, Client : %s, État : %s, Date %s' % (self.sales_contact, self.customer_instance, self.status, self.payment_due,)
+        if self.sales_contact:
+            return 'ID: %s, Vendeur assigné : %s, Client : %s' % (self.id, self.sales_contact.email, self.customer_instance.email)
+        return 'ID: %s, Vendeur assigné : AUCUN , Client : %s' % (self.id, self.customer_instance.email)
+    
+    @property
+    def readable_reverse_key(self):
+        if self.sales_contact:
+            return 'ID: %s, Vendeur assigné : %s, Client : %s' % (self.id, self.sales_contact.email, self.customer_instance.email)
+        return 'ID: %s, Vendeur assigné : AUCUN , Client : %s' % (self.id, self.customer_instance.email)

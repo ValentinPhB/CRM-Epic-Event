@@ -9,8 +9,9 @@ class CustomerAdmin(admin.ModelAdmin):
     """
     CustomerAdminForm to check if sales.contact is from "VENTE" group.
     """
-    list_display = ('id', 'first_name', 'last_name', 'email', 'phone_number', 'mobile_number', 'company_name',
-                    'date_created', 'date_updated', 'group', 'sales_contact')
+    list_display = ('id', 'sales_contact', 'first_name', 'last_name',
+                    'email', 'phone_number', 'mobile_number', 'company_name',
+                    'date_created', 'date_updated', 'group')
 
     search_fields = ['id', 'first_name', 'last_name', 'email', 'company_name', 'group',]
     form = CustomerAdminForm

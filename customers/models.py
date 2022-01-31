@@ -10,7 +10,7 @@ class Customer(models.Model):
         EXISTING = "EXISTANT"
         
     sales_contact = models.ForeignKey(User, verbose_name="Vendeur assigné",
-                                      related_name="assigned_customers", on_delete=models.SET_DEFAULT, default=0, blank=True, null=True, limit_choices_to={'group': "VENTE"})
+                                      related_name="assigned_customers", on_delete=models.SET_DEFAULT, default=None, blank=True, null=True, limit_choices_to={'group': "VENTE"})
     first_name = models.CharField(
         verbose_name="Prénom", max_length=150, blank=True)
     last_name = models.CharField(
@@ -32,10 +32,18 @@ class Customer(models.Model):
     date_updated = models.DateTimeField(
         verbose_name="Date de mise à jour", auto_now=True)
     group = models.CharField(max_length=100, choices=GroupChoices.choices, default=GroupChoices.POTENTIAL, verbose_name="Groupe")
-         
+      
     class Meta:
         verbose_name_plural = "Liste des clients"
         verbose_name = "Clients"
     
     def __str__(self):
-        return '%s, %s, Vendeur assigné : %s, Groupe : %s' % (self.last_name, self.email, self.sales_contact, self.group)
+        if self.sales_contact:
+            return 'ID: %s,  EMAIL: %s, Vendeur assigné : %s' % (self.id, self.email, self.sales_contact.email)
+        return 'ID: %s,  EMAIL: %s, Vendeur assigné : AUCUN' % (self.id, self.email)
+    
+    @property
+    def readable_reverse_key(self):
+        if self.sales_contact:
+            return 'ID: %s,  EMAIL: %s, Vendeur assigné : %s' % (self.id, self.email, self.sales_contact.email)
+        return 'ID: %s,  EMAIL: %s, Vendeur assigné : AUCUN' % (self.id, self.email)

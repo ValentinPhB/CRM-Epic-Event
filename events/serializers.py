@@ -13,14 +13,14 @@ class EventListSerializer(serializers.ModelSerializer):
         format="%d-%m-%Y %H:%M:%S", read_only=True)
     event_date = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S")
-    
+
     readable_customer_instance = serializers.CharField(
         source='customer_instance', read_only=True)
     readable_contract_instance = serializers.CharField(
         source='contract_instance', read_only=True)
     readable_support_contact = serializers.CharField(
         source='support_contact', read_only=True)
-    
+
     class Meta:
         model = Event
         fields = ('id', 'readable_customer_instance', 'readable_contract_instance', 'readable_support_contact',
@@ -34,7 +34,7 @@ class EventDetailSerializer(serializers.ModelSerializer):
         format="%d-%m-%Y %H:%M:%S", read_only=True)
     event_date = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S")
-    
+
     readable_customer_instance = serializers.CharField(
         source='customer_instance', read_only=True)
     readable_contract_instance = serializers.CharField(
@@ -48,7 +48,6 @@ class EventDetailSerializer(serializers.ModelSerializer):
                   'customer_instance', 'contract_instance', 'support_contact',
                   'date_created', 'date_updated', 'event_status', 'attendees',
                   'event_date', 'notes',)
-
 
     def validate_support_contact(self, value):
         """

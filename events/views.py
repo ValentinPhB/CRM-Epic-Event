@@ -22,7 +22,7 @@ class EventViewSet(viewsets.ModelViewSet):
     detail_serializer_class = EventDetailSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['id', 'customer_instance_id', 'contract_instance_id',
-                       'date_created', 'date_updated','support_contact_id', 'event_date', ]
+                       'date_created', 'date_updated', 'support_contact_id', 'event_date', ]
     search_fields = ['id', 'event_status', ]
     permission_classes = (IsAuthenticated, IsConcernedOrAdmin,)
 

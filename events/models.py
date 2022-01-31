@@ -38,7 +38,7 @@ class Event(models.Model):
         if self.support_contact:
             return 'ID: %s, Client : %s, Support : %s' % (self.id, self.customer_instance.email, self.support_contact.email)
         return 'ID: %s, Client : %s, Support : AUCUN' % (self.id, self.customer_instance.email)
-    
+
     @property
     def readable_reverse_key(self):
         if self.support_contact:

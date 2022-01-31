@@ -11,7 +11,7 @@ class CustomerListSerializer(serializers.ModelSerializer):
         format="%d-%m-%Y %H:%M:%S", read_only=True)
     readable_sales_contact = serializers.CharField(
         source='sales_contact', read_only=True)
-    
+
     class Meta:
         model = Customer
         fields = ('id', 'readable_sales_contact', 'first_name', 'last_name',
@@ -25,36 +25,36 @@ class CustomerDetailSerializer(serializers.ModelSerializer):
         format="%d-%m-%Y %H:%M:%S", read_only=True)
     date_updated = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S", read_only=True)
-    
+
     readable_sales_contact = serializers.CharField(
         source='sales_contact', read_only=True)
-    
+
     events = serializers.SlugRelatedField(many=True, read_only=True,
                                           slug_field='readable_reverse_key', allow_null=True)
     contracts = serializers.SlugRelatedField(many=True, read_only=True,
                                              slug_field='readable_reverse_key', allow_null=True)
-    
+
     class Meta:
         model = Customer
         fields = ('id', 'readable_sales_contact', 'first_name', 'last_name',
                   'email', 'phone_number', 'mobile_number', 'company_name',
                   'date_created', 'date_updated', 'group', 'events', 'contracts')
 
-    
+
 class CustomerAdminSerializer(serializers.ModelSerializer):
     date_created = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S", read_only=True)
     date_updated = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S", read_only=True)
-    
+
     readable_sales_contact = serializers.CharField(
         source='sales_contact', read_only=True)
-    
+
     events = serializers.SlugRelatedField(many=True, read_only=True,
                                           slug_field='readable_reverse_key')
     contracts = serializers.SlugRelatedField(many=True, read_only=True,
                                              slug_field='readable_reverse_key')
-    
+
     def validate_sales_contact(self, value):
         """
         Check if user is from group named "VENTE".
@@ -71,4 +71,3 @@ class CustomerAdminSerializer(serializers.ModelSerializer):
         fields = ('id', 'readable_sales_contact', 'sales_contact', 'first_name', 'last_name',
                   'email', 'phone_number', 'mobile_number', 'company_name',
                   'date_created', 'date_updated', 'group', 'events', 'contracts')
-

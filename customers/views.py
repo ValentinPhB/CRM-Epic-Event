@@ -21,9 +21,10 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerListSerializer
     detail_serializer_class = CustomerDetailSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    ordering_fields = ['id', 'date_created', 'date_updated', 'sales_contact_id']
+    ordering_fields = ['id', 'date_created',
+                       'date_updated', 'sales_contact_id']
     search_fields = ['id', 'first_name', 'last_name', 'email',
-                     'company_name', 'group',]
+                     'company_name', 'group', ]
     permission_classes = (IsAuthenticated, IsConcernedOrAdmin,)
 
     def get_serializer_class(self):

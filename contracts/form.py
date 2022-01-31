@@ -16,8 +16,8 @@ class ContractAdminForm(ModelForm):
     def clean_sales_contact(self):
         sales_contact = self.cleaned_data['sales_contact']
         if sales_contact and sales_contact.group != 'VENTE':
-                raise ValidationError(
-                    "ATTENTION : Pour être affecté à ce client, ce professionnel doit être du groupe 'VENTE'.")
+            raise ValidationError(
+                "ATTENTION : Pour être affecté à ce client, ce professionnel doit être du groupe 'VENTE'.")
         return sales_contact
 
     def clean_payment_due(self):

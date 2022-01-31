@@ -10,7 +10,7 @@ class CustomerAdminForm(ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
-        
+
     def clean_sales_contact(self):
         sales_contact = self.cleaned_data['sales_contact']
         if sales_contact and sales_contact.group != 'VENTE':

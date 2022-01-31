@@ -23,7 +23,7 @@ class IsConcernedOrAdmin(permissions.BasePermission):
     
     Only superusers can delete Event.
     """
-    
+
     def has_permission(self, request, view):
         if request.user.is_superuser or request.user.is_staff or request.user.group == "GESTION":
             return True
@@ -34,67 +34,25 @@ class IsConcernedOrAdmin(permissions.BasePermission):
         if request.user.group == "VENTE" and request.method in POST_METHOD:
             return True
 
-        # Detail Access (GET, PUT) for "VENTE" member linked with contract of current event,
-        try:
-            event = Event.objects.get(pk=view.kwargs.get('pk'))
-            contract = Contract.objects.get(pk=event.contract_instance.id)
-            if contract.sales_contact == request.user and request.method not in DELETE_METHOD:
+        # Detail Access (GET, PUT) for "SUPPORT" member linked with current event.
+        event = Event.objects.filter(pk=view.kwargs.get('pk')).first()
+        if event and event.support_contact == request.user and request.method not in DELETE_METHOD:
+            return True
+
+        # Detail Access (GET, PUT) for "VENTE" member linked with contract of current event.
+        if event:
+            contract = Contract.objects.filter(
+                pk=event.contract_instance.id).first()
+            if contract and contract.sales_contact == request.user and request.method not in DELETE_METHOD:
                 return True
-            
-            # If user is linked with customer by other contracts.
-            other_contract = Contract.objects.filter(customer_instance=event.customer_instance)   
-            if other_contract:
-                for x in other_contract:
-                    if x.sales_contact == request.user and request.method not in DELETE_METHOD:
-                        return True
-        except ObjectDoesNotExist:
-            return False
 
         # Detail Access (GET, PUT) for "VENTE" member linked with customer of current event.
-        try:
-            event = Event.objects.get(pk=view.kwargs.get('pk'))
-            customer = Customer.objects.get(pk=event.customer_instance.id)
-            if customer.sales_contact == request.user and request.method not in DELETE_METHOD:
+        if event:
+            customer = Customer.objects.filter(
+                pk=event.customer_instance.id).first()
+            if customer and customer.sales_contact == request.user and request.method not in DELETE_METHOD:
                 return True
-        except ObjectDoesNotExist:
-            return False
-
-        # Detail Access (GET, PUT) for "SUPPORT" member linked with current event.
-        try:
-            event = Event.objects.get(pk=view.kwargs.get('pk'))
-            if event.support_contact == request.user and request.method not in DELETE_METHOD:
-                return True
-        except ObjectDoesNotExist:
-            return False
-
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser or request.user.is_staff or request.user.group == "GESTION":
+        if self.has_permission(request, view):
             return True
-    
-        if obj.support_contact == request.user:
-            return True
-        
-        # Detail Access (GET, PUT) for "VENTE" member linked with contract of current event,
-        try:
-            contract = Contract.objects.get(pk=obj.contract_instance.id)
-            if contract.sales_contact == request.user:
-                return True
-
-            # If user is linked with customer by other contracts.
-            other_contract = Contract.objects.filter(
-                customer_instance=obj.customer_instance.id)
-            if other_contract:
-                for x in other_contract:
-                    if x.sales_contact == request.user:
-                        return True
-        except ObjectDoesNotExist:
-            return False
-
-        # Detail Access (GET, PUT) for "VENTE" member linked with customer of current event.
-        try:
-            customer = Customer.objects.get(pk=obj.customer_instance.id)
-            if customer.sales_contact == request.user:
-                return True
-        except ObjectDoesNotExist:
-            return False

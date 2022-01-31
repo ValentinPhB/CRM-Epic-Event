@@ -13,5 +13,6 @@ class CustomerAdmin(admin.ModelAdmin):
                     'email', 'phone_number', 'mobile_number', 'company_name',
                     'date_created', 'date_updated', 'group')
 
-    search_fields = ['id', 'first_name', 'last_name', 'email', 'company_name', 'group',]
+    search_fields = ['id', 'first_name', 'last_name',
+                     'email', 'company_name', 'group', ]
     form = CustomerAdminForm

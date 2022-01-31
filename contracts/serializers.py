@@ -68,4 +68,3 @@ class ContractDetailSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     "ATTENTION : Une date antérieure à celle du jour actuel ne peut être selectionnée.")
             return value
-    

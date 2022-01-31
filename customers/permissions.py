@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from rest_framework import permissions
 
@@ -22,67 +22,36 @@ class IsConcernedOrAdmin(permissions.BasePermission):
     
     Only superusers can delete Customers and add a "VENTE" User to customers.
     """
-    
+
     def has_permission(self, request, view):
         if request.user.is_superuser or request.user.is_staff or request.user.group == "GESTION":
             return True
 
         if request.method in SAFE_METHODS:
             return True
-        
+
         if request.user.group == "VENTE" and request.method in POST_METHOD:
             return True
 
         # Detail Access (GET, PUT) for "VENTE" member linked with customer.
-        try:
-            customer = Customer.objects.get(pk=view.kwargs.get('pk'))
-            if customer.sales_contact == request.user and request.method not in DELETE_METHOD:
-                return True
-        except ObjectDoesNotExist:
-            return False
-        
-        # Detail Access (GET, PUT) for "VENTE" member linked with customer by contract.
-        try:
-            customer = Customer.objects.get(pk=view.kwargs.get('pk'))
-            other_contract = Contract.objects.filter(customer_instance=customer.id)
-            if other_contract:
-                for x in other_contract:
-                    if x.sales_contact == request.user and request.method not in DELETE_METHOD:
-                        return True
-        except ObjectDoesNotExist:
-            return False
-        
-        # Detail Access (GET) for "SUPPORT" member linked with customer by event.
-        try:
-            event = Event.objects.get(customer_instance=view.kwargs.get(
-                'pk'), support_contact=request.user.id)
-            if request.method in SAFE_METHODS:
-                return True
-        except ObjectDoesNotExist:
-            return False
-            
-        
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser or request.user.is_staff or request.user.group == "GESTION":
+        customer = Customer.objects.filter(pk=view.kwargs.get('pk')).first()
+        if customer and customer.sales_contact == request.user and request.method not in DELETE_METHOD:
             return True
-        
-        if obj.sales_contact == request.user:
-            return True
-        
-        # Detail Access (GET) for "SUPPORT" member linked with customer by event.
-        try:
-            event = Event.objects.get(customer_instance=obj.id, support_contact=request.user.id)
-            return True
-        except ObjectDoesNotExist:
-            return False
 
-        # Detail Access (GET, PUT) for "VENTE" member linked with customer by contract.
-        try:
-            other_contract = Contract.objects.filter(
-                customer_instance=obj.id)
-            if other_contract:
-                for x in other_contract:
-                    if x.sales_contact == request.user:
-                        return True
-        except ObjectDoesNotExist:
-            return False
+        # Detail Access (GET, PUT) for "VENTE" member linked with customer by contracts.
+        if customer:
+            contracts = Contract.objects.filter(
+                customer_instance=customer, sales_contact=request.user).first()
+            if contracts and request.method not in DELETE_METHOD:
+                return True
+
+        # Detail Access (GET) for "SUPPORT" member linked with customer by events.
+        if customer:
+            events = Event.objects.filter(
+                customer_instance=customer, support_contact=request.user).first()
+            if events and request.method in SAFE_METHODS:
+                return True
+
+    def has_object_permission(self, request, view, obj):
+        if self.has_permission(request, view):
+            return True

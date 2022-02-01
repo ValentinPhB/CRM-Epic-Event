@@ -9,13 +9,7 @@ from .serializers import CustomerListSerializer, CustomerAdminSerializer, Custom
 # Documentation is in french because it's displayed in the view.
 class CustomerViewSet(viewsets.ModelViewSet):
     """
-    La recherche est sensible aux attributs suivants : 'id(Customer)', 'first_name', 'last_name', 'email', 'company_name', 'group'.\n
-    Les éléments peuvent être ordonnés pour les attributs suivants :'id(Customer)', 'date_created', 'date_updated', 'sales_contact_id'\n
-    **Ordonner l'attribut 'sales_contact_id' permet de mettre en évidence les clients non affectés à un membre de l'équipe "VENTE"**.\n
-    Seuls les "supers-utilisateurs" peuvent affecter une membre de l'équipe "VENTE" à un Client et supprimer une instance.\n
-    Les membres de l'équipe "VENTE" et "SUPPORT" peuvent avoir accès, en lecture, à la liste générale des clients.\n
-    Les membres de l'équipe "VENTE" peuvent avoir accès au détail d'un client et en modifier ses attributs si et seulement si, il lui est affilié.\n
-    Les membres de l'équipe "SUPPORT" peuvent avoir accès au détail d'un client (lecture) si et seulement si, il lui est affilié par l'intermédiaire d'un évènement.
+    ### [Documentation, Permissions, Filtering and Ordering. Select *Customer* folder.](https://documenter.getpostman.com/view/18470677/UVeDtTUR)\n
     """
     queryset = Customer.objects.all()
     serializer_class = CustomerListSerializer

@@ -45,13 +45,6 @@ class IsConcernedOrAdmin(permissions.BasePermission):
             if contracts and request.method not in DELETE_METHOD:
                 return True
 
-        # Detail Access (GET) for "SUPPORT" member linked with customer by events.
-        if customer:
-            events = Event.objects.filter(
-                customer_instance=customer, support_contact=request.user).first()
-            if events and request.method in SAFE_METHODS:
-                return True
-
     def has_object_permission(self, request, view, obj):
         if self.has_permission(request, view):
             return True

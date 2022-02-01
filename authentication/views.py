@@ -11,10 +11,7 @@ from .serializers import UserListSerializer, UserDetailSerializer
 # Documentation is in french because it's displayed in the view.
 class UserViewSet(viewsets.ModelViewSet):
     """
-    La recherche est sensible aux attributs suivants : 'id'(User), 'first_name', 'last_name', 'email', 'is_superuser'(BOOL), 'group'.\n
-    Les éléments peuvent être ordonnés pour les attributs suivants :'id(User)', 'date_created', 'date_updated' \n
-    Seuls les "supers-utilisateurs" peuvent ajouter, modifier ou supprimer un utilisateur.\n
-    Les membres de l'équipe "VENTE" et "SUPPORT" peuvent avoir accès, en lecture, à la liste générale des utilisateurs.
+    ### [Documentation, Permissions, Filtering and Ordering. Select *User* folder.](https://documenter.getpostman.com/view/18470677/UVeDtTUR)\n
     """
     queryset = User.objects.all()
     serializer_class = UserListSerializer

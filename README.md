@@ -18,21 +18,21 @@ CRM-Epic-event-main is a secured Customer Relationship Management system made wi
 
 Python 3.10.0
 
-asgiref==3.4.1
-autopep8==1.6.0
-backports.zoneinfo==0.2.1
-Django==4.0.1
-django-filter==21.1
-djangorestframework==3.13.1
-drf-nested-routers==0.93.4
-importlib-metadata==4.10.1
-Markdown==3.3.6
-psycopg2-binary==2.9.3
-pycodestyle==2.8.0
-pytz==2021.3
-sqlparse==0.4.2
-toml==0.10.2
-zipp==3.7.0
+* asgiref==3.4.1
+* autopep8==1.6.0
+* backports.zoneinfo==0.2.1
+* Django==4.0.1
+* django-filter==21.1
+* djangorestframework==3.13.1
+* drf-nested-routers==0.93.4
+* importlib-metadata==4.10.1
+* Markdown==3.3.6
+* psycopg2-binary==2.9.3
+* pycodestyle==2.8.0
+* pytz==2021.3
+* sqlparse==0.4.2
+* toml==0.10.2
+* zipp==3.7.0
 
 ## 3. Setup
 ### A) *Setup for Unix*

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm, ValidationError, DateField
 
 from .models import Event
 
@@ -22,8 +22,8 @@ class EventAdminForm(ModelForm):
 
     def clean_event_date(self):
         event_date = self.cleaned_data['event_date']
-        date_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        if event_date and event_date.strftime("%Y-%m-%d %H:%M:%S") < date_now:
+        date_now = datetime.now().strftime("%Y-%m-%d")
+        if event_date and event_date.strftime("%Y-%m-%d") < date_now:
             raise ValidationError(
                 "ATTENTION : Une date antérieure à celle du jour actuel ne peut être selectionnée.")
         return event_date

@@ -6,13 +6,13 @@ from authentication.models import User
 from .models import Event
 
 
-class EventListSerializer(serializers.ModelSerializer):
+class EventBaseSerializer(serializers.ModelSerializer):
     date_created = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S", read_only=True)
     date_updated = serializers.DateTimeField(
         format="%d-%m-%Y %H:%M:%S", read_only=True)
-    event_date = serializers.DateTimeField(
-        format="%d-%m-%Y %H:%M:%S")
+    event_date = serializers.DateField(
+        format="%d-%m-%Y")
 
     readable_customer_instance = serializers.CharField(
         source='customer_instance', read_only=True)
@@ -20,35 +20,7 @@ class EventListSerializer(serializers.ModelSerializer):
         source='contract_instance', read_only=True)
     readable_support_contact = serializers.CharField(
         source='support_contact', read_only=True)
-
-    class Meta:
-        model = Event
-        fields = ('id', 'readable_customer_instance', 'readable_contract_instance', 'readable_support_contact',
-                  'date_created', 'date_updated', 'event_status', 'event_date',)
-
-
-class EventDetailSerializer(serializers.ModelSerializer):
-    date_created = serializers.DateTimeField(
-        format="%d-%m-%Y %H:%M:%S", read_only=True)
-    date_updated = serializers.DateTimeField(
-        format="%d-%m-%Y %H:%M:%S", read_only=True)
-    event_date = serializers.DateTimeField(
-        format="%d-%m-%Y %H:%M:%S")
-
-    readable_customer_instance = serializers.CharField(
-        source='customer_instance', read_only=True)
-    readable_contract_instance = serializers.CharField(
-        source='contract_instance', read_only=True)
-    readable_support_contact = serializers.CharField(
-        source='support_contact', read_only=True)
-
-    class Meta:
-        model = Event
-        fields = ('id', 'readable_customer_instance', 'readable_contract_instance', 'readable_support_contact',
-                  'customer_instance', 'contract_instance', 'support_contact',
-                  'date_created', 'date_updated', 'event_status', 'attendees',
-                  'event_date', 'notes',)
-
+    
     def validate_support_contact(self, value):
         """
         Check if user is from group named "SUPPORT".
@@ -62,11 +34,48 @@ class EventDetailSerializer(serializers.ModelSerializer):
 
     def validate_event_date(self, value):
         """
-        Check if 'event_date' > datetime.now.
+        Check if 'event_date' and if 'event_date > datetime.now for create or update.
         """
-        if value:
-            date_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            if value.strftime("%Y-%m-%d %H:%M:%S") < date_now:
+        date_now = datetime.now().strftime("%Y-%m-%d")
+
+        # Update
+        if self.instance and value:
+            if value.strftime("%Y-%m-%d") == '1900-01-01':
+                return self.instance.event_date
+
+            if value.strftime("%Y-%m-%d") != '1900-01-01' and value.strftime("%Y-%m-%d") < date_now:
                 raise serializers.ValidationError(
                     "ATTENTION : Une date antérieure à celle du jour actuel ne peut être selectionnée.")
-            return value
+        #create
+        elif not self.instance and value:
+            if value.strftime("%Y-%m-%d") == '1900-01-01':
+                return None
+
+            if value.strftime("%Y-%m-%d") != '1900-01-01' and value.strftime("%Y-%m-%d") < date_now:
+                raise serializers.ValidationError(
+                    "ATTENTION : Une date antérieure à celle du jour actuel ne peut être selectionnée.")
+        return value
+
+class EventListSerializer(EventBaseSerializer):
+    class Meta:
+        model = Event
+        fields = ('id', 'readable_customer_instance', 'readable_contract_instance',
+                  'readable_support_contact', 'date_created', 'date_updated',
+                  'event_status', 'event_date',)
+
+class EventDetailSerializer(EventBaseSerializer):
+    class Meta:
+        model = Event
+        fields = ('id', 'readable_customer_instance', 'readable_contract_instance',
+                  'readable_support_contact','customer_instance', 'contract_instance',
+                  'date_created', 'date_updated', 'event_status', 'attendees',
+                  'event_date', 'notes',)
+
+class EventAdminSerializer(EventBaseSerializer):
+
+    class Meta:
+        model = Event
+        fields = ('id', 'readable_customer_instance', 'readable_contract_instance',
+                  'readable_support_contact','customer_instance', 'contract_instance',
+                  'support_contact', 'date_created', 'date_updated', 'event_status',
+                  'attendees', 'event_date', 'notes',)

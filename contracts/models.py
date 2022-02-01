@@ -19,8 +19,8 @@ class Contract(models.Model):
         verbose_name="Date de mise à jour", auto_now=True)
     status = models.BooleanField(verbose_name="Contrat signé ?", default=False)
     amount = models.FloatField(
-        validators=[validators.MinValueValidator(0.1)], verbose_name="Coût", blank=True)
-    payment_due = models.DateTimeField(verbose_name="Date de paiement prévue")
+        validators=[validators.MinValueValidator(0.1)], verbose_name="Coût", blank=True, null=True)
+    payment_due = models.DateField(verbose_name="Date de paiement prévue", null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Liste des contrats"

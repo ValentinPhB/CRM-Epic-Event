@@ -22,8 +22,8 @@ class ContractAdminForm(ModelForm):
 
     def clean_payment_due(self):
         payment_due = self.cleaned_data['payment_due']
-        date_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        if payment_due and payment_due.strftime("%Y-%m-%d %H:%M:%S") < date_now:
+        date_now = datetime.now().strftime("%Y-%m-%d")
+        if payment_due and payment_due.strftime("%Y-%m-%d") < date_now:
             raise ValidationError(
                 "ATTENTION : Une date antérieure à celle du jour actuel ne peut être selectionnée.")
         return payment_due
